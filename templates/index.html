@@ -1,0 +1,191 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>AUTOVAL | Intelligent Car Valuation</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css', v=4) }}">
+
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<nav class="navbar">
+    <a href="/" class="brand">
+        <span class="brand-icon">A</span>
+        AUTOVAL<span class="brand-dot">.</span>
+    </a>
+
+    <div class="nav-links" id="navLinks">
+        <a href="/" class="active">Home</a>
+        <a href="/prediction">Predict Price</a>
+        <a href="/analytics">Analytics</a>
+        <a href="/comparison">Models</a>
+        <a href="/explore">Explore Cars</a>
+        <a href="/history">History</a>
+    </div>
+
+    <a href="/prediction" class="nav-button">Get Valuation ↗</a>
+
+    <button class="menu-toggle" id="menuToggle">☰</button>
+</nav>
+
+<section class="hero">
+
+    <div class="hero-content">
+
+        <div class="eyebrow">
+            <span class="status-dot"></span>
+            INTELLIGENT AUTOMOTIVE VALUATION
+        </div>
+
+        <h1>
+            YOUR CAR.<br>
+            YOUR VALUE.<br>
+            <span>OUR INTELLIGENCE.</span>
+        </h1>
+
+        <p class="hero-description">
+            Discover the estimated market value of your vehicle
+            through intelligent machine learning.
+            Smarter estimates. Better decisions.
+        </p>
+
+        <div class="hero-actions">
+            <a href="/prediction" class="primary-button">
+                Predict Your Car Price ↗
+            </a>
+
+            <a href="/analytics" class="secondary-button">
+                Explore Insights
+            </a>
+        </div>
+
+        <div class="hero-note">
+            DATA-DRIVEN VALUATION ━━━ MACHINE LEARNING POWERED
+        </div>
+
+    </div>
+
+    <div class="hero-bottom">
+        <span>INTELLIGENCE IN EVERY ESTIMATE</span>
+        <span>DISCOVER YOUR CAR'S WORTH ↓</span>
+    </div>
+
+</section>
+
+<section class="intro-section">
+
+    <div class="section-label">01 / THE PLATFORM</div>
+
+    <div class="intro-grid">
+
+        <h2>
+            A smarter way to understand your car's
+            <span>worth.</span>
+        </h2>
+
+        <div class="intro-text">
+            <p>
+                AUTOVAL transforms vehicle information into meaningful
+                price estimates using machine learning algorithms.
+                Explore market insights and make informed decisions.
+            </p>
+
+            <a href="/prediction" class="text-link">
+                Discover your car value ↗
+            </a>
+        </div>
+
+    </div>
+
+</section>
+
+<section class="features-section">
+
+    <div class="section-label">02 / EXPLORE THE PLATFORM</div>
+
+    <div class="section-heading">
+        <h2>
+            Intelligence beyond<br>
+            the estimate.
+        </h2>
+    </div>
+
+    <div class="feature-grid">
+
+        <a href="/prediction" class="feature-card">
+            <span class="feature-number">01 / PREDICTION</span>
+            <span class="feature-icon">↗</span>
+            <div>
+                <h3>Price Prediction</h3>
+                <p>Estimate your vehicle's selling price using our trained ML model.</p>
+            </div>
+        </a>
+
+        <a href="/comparison" class="feature-card">
+            <span class="feature-number">02 / PERFORMANCE</span>
+            <span class="feature-icon">⌁</span>
+            <div>
+                <h3>Model Comparison</h3>
+                <p>Explore and compare machine learning algorithms.</p>
+            </div>
+        </a>
+
+        <a href="/analytics" class="feature-card">
+            <span class="feature-number">03 / INSIGHTS</span>
+            <span class="feature-icon">◫</span>
+            <div>
+                <h3>Market Analytics</h3>
+                <p>Discover vehicle trends and dataset insights.</p>
+            </div>
+        </a>
+
+        <a href="/explore" class="feature-card">
+            <span class="feature-number">04 / DISCOVERY</span>
+            <span class="feature-icon">⌕</span>
+            <div>
+                <h3>Explore Vehicles</h3>
+                <p>Search and filter vehicles from the dataset.</p>
+            </div>
+        </a>
+
+    </div>
+
+</section>
+
+<section class="cta-section">
+
+    <div class="section-label">03 / START YOUR JOURNEY</div>
+
+    <h2>
+        Every car has a story.<br>
+        Know its <span>value.</span>
+    </h2>
+
+    <a href="/prediction" class="primary-button">
+        Start Your Prediction ↗
+    </a>
+
+</section>
+
+<footer class="footer">
+
+    <a href="/" class="brand">
+        <span class="brand-icon">A</span>
+        AUTOVAL<span class="brand-dot">.</span>
+    </a>
+
+    <p>Intelligent Used Car Price Prediction</p>
+
+    <span>© 2026 AUTOVAL. ALL RIGHTS RESERVED.</span>
+
+</footer>
+
+<script src="{{ url_for('static', filename='js/script.js', v=4) }}"></script>
+
+</body>
+</html>

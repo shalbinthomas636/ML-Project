@@ -1,0 +1,174 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Explore Cars | AUTOVAL</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css', v=4) }}">
+
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<nav class="navbar">
+    <a href="/" class="brand"><span class="brand-icon">A</span>AUTOVAL<span class="brand-dot">.</span></a>
+
+    <div class="nav-links" id="navLinks">
+        <a href="/">Home</a>
+        <a href="/prediction">Predict Price</a>
+        <a href="/analytics">Analytics</a>
+        <a href="/comparison">Models</a>
+        <a href="/explore" class="active">Explore Cars</a>
+        <a href="/history">History</a>
+    </div>
+
+    <a href="/prediction" class="nav-button">Estimate Value ↗</a>
+    <button class="menu-toggle" id="menuToggle">☰</button>
+</nav>
+
+<main class="page-container">
+
+    <section class="page-heading">
+        <div class="section-label">04 / VEHICLE DISCOVERY</div>
+        <h1>Explore the <span>automotive world.</span></h1>
+        <p>Search and filter actual used-car records from your dataset.</p>
+    </section>
+
+    <section class="filter-panel">
+
+        <div class="panel-heading">
+            <div>
+                <span class="section-label">FIND YOUR VEHICLE</span>
+                <h2>Search & filter</h2>
+            </div>
+        </div>
+
+        <form method="GET" action="{{ url_for('explore') }}" class="filter-grid">
+
+            <div class="form-group">
+                <label for="search">Search vehicle</label>
+                <input
+                    type="text"
+                    id="search"
+                    name="search"
+                    value="{{ request.args.get('search', '') }}"
+                    placeholder="Search brand or model">
+            </div>
+
+            <div class="form-group">
+                <label for="fuel">Fuel type</label>
+                <select id="fuel" name="fuel">
+                    <option value="">All fuel types</option>
+
+                    {% for item in fuel_options %}
+                        <option value="{{ item }}"
+                            {% if request.args.get('fuel') == item %}selected{% endif %}>
+                            {{ item }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="transmission">Transmission</label>
+                <select id="transmission" name="transmission">
+                    <option value="">All transmissions</option>
+                    <option value="Manual" {% if request.args.get('transmission') == 'Manual' %}selected{% endif %}>Manual</option>
+                    <option value="Automatic" {% if request.args.get('transmission') == 'Automatic' %}selected{% endif %}>Automatic</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="brand">Brand</label>
+                <select id="brand" name="brand">
+                    <option value="">All brands</option>
+
+                    {% for item in brand_options %}
+                        <option value="{{ item }}"
+                            {% if request.args.get('brand') == item %}selected{% endif %}>
+                            {{ item }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="filter-actions">
+                <button type="submit" class="primary-button">Apply Filters ↗</button>
+                <a href="{{ url_for('explore') }}" class="secondary-button">Reset</a>
+            </div>
+
+        </form>
+
+    </section>
+
+    <section class="vehicle-section">
+
+        <div class="panel-heading">
+            <div>
+                <span class="section-label">DATABASE COLLECTION</span>
+                <h2>Available vehicle records</h2>
+            </div>
+
+            <span class="chart-tag">{{ cars|length }} RECORDS SHOWN</span>
+        </div>
+
+        <div class="table-wrapper">
+
+            <table class="premium-table">
+
+                <thead>
+                    <tr>
+                        <th>VEHICLE</th>
+                        <th>YEAR</th>
+                        <th>FUEL</th>
+                        <th>TRANSMISSION</th>
+                        <th>KILOMETRES</th>
+                        <th>SELLING PRICE</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    {% for car in cars %}
+
+                    <tr>
+                        <td>{{ car.get('name', car.get('brand', 'Vehicle')) }}</td>
+                        <td>{{ car.get('year', '—') }}</td>
+                        <td>{{ car.get('fuel', '—') }}</td>
+                        <td>{{ car.get('transmission', '—') }}</td>
+                        <td>{{ "{:,.0f}".format(car.get('km_driven', 0)|float) }}</td>
+                        <td>₹{{ "{:,.0f}".format(car.get('selling_price', 0)|float) }}</td>
+                    </tr>
+
+                    {% else %}
+
+                    <tr>
+                        <td colspan="6" class="empty-cell">
+                            No vehicles match your search.
+                        </td>
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </section>
+
+</main>
+
+<footer class="footer">
+    <a href="/" class="brand"><span class="brand-icon">A</span>AUTOVAL<span class="brand-dot">.</span></a>
+    <p>Discover vehicles through data</p>
+    <span>© 2026 AUTOVAL</span>
+</footer>
+
+<script src="{{ url_for('static', filename='js/script.js', v=4) }}"></script>
+
+</body>
+</html>

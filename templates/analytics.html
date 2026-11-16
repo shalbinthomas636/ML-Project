@@ -1,0 +1,215 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analytics | AUTOVAL</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css', v=4) }}">
+
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+<nav class="navbar">
+    <a href="/" class="brand"><span class="brand-icon">A</span>AUTOVAL<span class="brand-dot">.</span></a>
+
+    <div class="nav-links" id="navLinks">
+        <a href="/">Home</a>
+        <a href="/prediction">Predict Price</a>
+        <a href="/analytics" class="active">Analytics</a>
+        <a href="/comparison">Models</a>
+        <a href="/explore">Explore Cars</a>
+        <a href="/history">History</a>
+    </div>
+
+    <a href="/prediction" class="nav-button">Predict Now ↗</a>
+    <button class="menu-toggle" id="menuToggle">☰</button>
+</nav>
+
+<main class="page-container">
+
+    <section class="page-heading">
+        <div class="section-label">02 / DATA INTELLIGENCE</div>
+        <h1>Understand the <span>market.</span></h1>
+        <p>Explore real vehicle records, price distributions and market patterns.</p>
+    </section>
+
+    <section class="stats-grid">
+
+        <div class="stat-card">
+            <span class="stat-label">TOTAL VEHICLES</span>
+            <h2>{{ total_cars }}</h2>
+            <p>Cleaned dataset records</p>
+        </div>
+
+        <div class="stat-card">
+            <span class="stat-label">AVERAGE PRICE</span>
+            <h2 class="stat-small">{{ average_price }}</h2>
+            <p>Average selling price</p>
+        </div>
+
+        <div class="stat-card">
+            <span class="stat-label">AVERAGE MILEAGE</span>
+            <h2>{{ average_mileage }}</h2>
+            <p>Km per litre</p>
+        </div>
+
+        <div class="stat-card">
+            <span class="stat-label">CAR BRANDS</span>
+            <h2>{{ brand_count }}</h2>
+            <p>Unique manufacturers</p>
+        </div>
+
+    </section>
+
+    <section class="analytics-grid">
+
+        <div class="chart-panel">
+            <div class="panel-heading">
+                <div>
+                    <span class="section-label">BRAND ANALYSIS</span>
+                    <h2>Average brand prices</h2>
+                </div>
+            </div>
+            <div class="chart-container">
+                <canvas id="brandChart"></canvas>
+            </div>
+        </div>
+
+        <div class="chart-panel">
+            <div class="panel-heading">
+                <div>
+                    <span class="section-label">FUEL INSIGHTS</span>
+                    <h2>Fuel distribution</h2>
+                </div>
+            </div>
+            <div class="chart-container">
+                <canvas id="fuelChart"></canvas>
+            </div>
+        </div>
+
+        <div class="chart-panel full-width">
+            <div class="panel-heading">
+                <div>
+                    <span class="section-label">PRICE ANALYSIS</span>
+                    <h2>Average selling price by year</h2>
+                </div>
+            </div>
+            <div class="chart-container chart-large">
+                <canvas id="yearChart"></canvas>
+            </div>
+        </div>
+
+    </section>
+
+</main>
+
+<footer class="footer">
+    <a href="/" class="brand"><span class="brand-icon">A</span>AUTOVAL<span class="brand-dot">.</span></a>
+    <p>Data-driven automotive insights</p>
+    <span>© 2026 AUTOVAL</span>
+</footer>
+
+<script id="analytics-data" type="application/json">
+{
+    "brands": {{ brand_data|tojson }},
+    "fuels": {{ fuel_data|tojson }},
+    "years": {{ year_data|tojson }}
+}
+</script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const data = JSON.parse(
+        document.getElementById("analytics-data").textContent
+    );
+
+    const commonOptions = {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: {
+                labels: {
+                    color: "#d7d0c8"
+                }
+            }
+        }
+    };
+
+    new Chart(document.getElementById("brandChart"), {
+        type: "bar",
+        data: {
+            labels: Object.keys(data.brands),
+            datasets: [{
+                label: "Average price (₹)",
+                data: Object.values(data.brands),
+                backgroundColor: "#e6a15c",
+                borderRadius: 7
+            }]
+        },
+        options: {
+            ...commonOptions,
+            scales: {
+                x: {
+                    ticks: { color: "#b8b0a8" }
+                },
+                y: {
+                    ticks: { color: "#b8b0a8" }
+                }
+            }
+        }
+    });
+
+    new Chart(document.getElementById("fuelChart"), {
+        type: "doughnut",
+        data: {
+            labels: Object.keys(data.fuels),
+            datasets: [{
+                data: Object.values(data.fuels),
+                backgroundColor: [
+                    "#e6a15c",
+                    "#c47b44",
+                    "#9d9c8b",
+                    "#6e8490",
+                    "#b2a18d"
+                ],
+                borderWidth: 0
+            }]
+        },
+        options: commonOptions
+    });
+
+    new Chart(document.getElementById("yearChart"), {
+        type: "line",
+        data: {
+            labels: Object.keys(data.years),
+            datasets: [{
+                label: "Average selling price (₹)",
+                data: Object.values(data.years),
+                borderColor: "#e6a15c",
+                backgroundColor: "rgba(230,161,92,0.12)",
+                fill: true,
+                tension: 0.35
+            }]
+        },
+        options: {
+            ...commonOptions,
+            scales: {
+                x: { ticks: { color: "#b8b0a8" } },
+                y: { ticks: { color: "#b8b0a8" } }
+            }
+        }
+    });
+
+});
+</script>
+
+<script src="{{ url_for('static', filename='js/script.js', v=4) }}"></script>
+
+</body>
+</html>

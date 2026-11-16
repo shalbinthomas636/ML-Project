@@ -1,0 +1,222 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Model Intelligence | AUTOVAL</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css', v=4) }}">
+
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<nav class="navbar">
+    <a href="/" class="brand"><span class="brand-icon">A</span>AUTOVAL<span class="brand-dot">.</span></a>
+
+    <div class="nav-links" id="navLinks">
+        <a href="/">Home</a>
+        <a href="/prediction">Predict Price</a>
+        <a href="/analytics">Analytics</a>
+        <a href="/comparison" class="active">Models</a>
+        <a href="/explore">Explore Cars</a>
+        <a href="/history">History</a>
+    </div>
+
+    <a href="/prediction" class="nav-button">Try Prediction ↗</a>
+    <button class="menu-toggle" id="menuToggle">☰</button>
+</nav>
+
+<main class="page-container comparison-page">
+
+    <section class="page-heading">
+        <div class="section-label">03 / MODEL INTELLIGENCE</div>
+        <h1>Performance <span>without guesswork.</span></h1>
+        <p>Compare the performance of machine learning algorithms on the test dataset.</p>
+    </section>
+
+    <section class="highlight-panel comparison-highlight">
+        <div>
+            <span class="section-label">BEST PERFORMING MODEL</span>
+            <h2>{{ best_algorithm or "Not available" }}</h2>
+            <p>Selected using the lowest Root Mean Squared Error.</p>
+        </div>
+        <div class="highlight-icon">✦</div>
+    </section>
+
+    <section class="stats-grid">
+
+        <div class="stat-card">
+            <span class="stat-label">ALGORITHMS TESTED</span>
+            <h2>{{ comparison|length }}</h2>
+            <span class="stat-description">Machine learning models</span>
+        </div>
+
+        <div class="stat-card">
+            <span class="stat-label">BEST MODEL</span>
+            <h2 class="stat-small">{{ best_algorithm or "N/A" }}</h2>
+            <span class="stat-description">Lowest RMSE</span>
+        </div>
+
+        <div class="stat-card">
+            <span class="stat-label">TRAIN TEST SPLIT</span>
+            <h2>80 / 20</h2>
+            <span class="stat-description">Training and testing</span>
+        </div>
+
+    </section>
+
+    <section class="chart-panel">
+
+        <div class="panel-heading">
+            <div>
+                <span class="section-label">ALGORITHM EVALUATION</span>
+                <h2>RMSE performance</h2>
+                <p>Lower RMSE represents smaller prediction errors.</p>
+            </div>
+            <span class="chart-tag">RMSE ANALYSIS</span>
+        </div>
+
+        {% if comparison %}
+
+        {% set max_rmse = comparison|map(attribute='RMSE')|map('float')|max %}
+
+        <div class="comparison-chart">
+
+            {% for row in comparison %}
+
+            {% set rmse = row['RMSE']|float %}
+
+            <div class="chart-row">
+
+                <div class="chart-label">
+                    <span>{{ row['Algorithm'] }}</span>
+                    <strong>₹{{ "{:,.0f}".format(rmse) }}</strong>
+                </div>
+
+                <div class="chart-track">
+                    <div
+                        class="chart-fill"
+                        style="width: {{ (rmse / max_rmse * 100) if max_rmse > 0 else 0 }}%">
+                    </div>
+                </div>
+
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+        {% else %}
+
+        <div class="empty-state">
+            <h3>No comparison data found</h3>
+            <p>Run train_model.py to generate the comparison results.</p>
+        </div>
+
+        {% endif %}
+
+    </section>
+
+    <section class="chart-panel">
+
+        <div class="panel-heading">
+            <div>
+                <span class="section-label">MODEL RESULTS</span>
+                <h2>Detailed evaluation metrics</h2>
+            </div>
+        </div>
+
+        <div class="table-wrapper">
+
+            <table class="premium-table">
+
+                <thead>
+                    <tr>
+                        <th>RANK</th>
+                        <th>ALGORITHM</th>
+                        <th>MAE</th>
+                        <th>RMSE</th>
+                        <th>R² SCORE</th>
+                        <th>MAPE</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    {% for row in comparison %}
+
+                    <tr>
+                        <td><span class="rank-number">{{ loop.index }}</span></td>
+
+                        <td>
+                            <strong>{{ row['Algorithm'] }}</strong>
+
+                            {% if row['Algorithm'] == best_algorithm %}
+                                <span class="best-model-tag">BEST MODEL</span>
+                            {% endif %}
+                        </td>
+
+                        <td>₹{{ "{:,.2f}".format(row['MAE']|float) }}</td>
+                        <td>₹{{ "{:,.2f}".format(row['RMSE']|float) }}</td>
+                        <td>{{ "{:.4f}".format(row['R2 Score']|float) }}</td>
+                        <td>{{ "{:.2f}".format(row['MAPE (%)']|float) }}%</td>
+                    </tr>
+
+                    {% else %}
+
+                    <tr>
+                        <td colspan="6" class="empty-cell">No model results available.</td>
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </section>
+
+    <section class="metric-explanation">
+
+        <div class="metric-card">
+            <span class="section-label">01 / MAE</span>
+            <h3>Mean Absolute Error</h3>
+            <p>Average absolute difference between actual and predicted prices. Lower is better.</p>
+        </div>
+
+        <div class="metric-card">
+            <span class="section-label">02 / RMSE</span>
+            <h3>Root Mean Squared Error</h3>
+            <p>Penalizes large prediction errors more strongly. Lower is better.</p>
+        </div>
+
+        <div class="metric-card">
+            <span class="section-label">03 / R²</span>
+            <h3>R-squared Score</h3>
+            <p>Measures how much price variation is explained by the model. Higher is generally better.</p>
+        </div>
+
+        <div class="metric-card">
+            <span class="section-label">04 / MAPE</span>
+            <h3>Mean Absolute Percentage Error</h3>
+            <p>Shows the average absolute percentage error. Lower is better.</p>
+        </div>
+
+    </section>
+
+</main>
+
+<footer class="footer">
+    <a href="/" class="brand"><span class="brand-icon">A</span>AUTOVAL<span class="brand-dot">.</span></a>
+    <p>Intelligent Used Car Price Prediction</p>
+    <span>© 2026 AUTOVAL</span>
+</footer>
+
+<script src="{{ url_for('static', filename='js/script.js', v=4) }}"></script>
+
+</body>
+</html>
