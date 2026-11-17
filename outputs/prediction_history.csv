@@ -1,3 +1,7 @@
 date,brand,name,year,fuel,km_driven,predicted_price
 17-11-2026 12:55 AM,Hyundai,,2012,Petrol,50000,282699.9244444444
+<<<<<<< Updated upstream
 17-11-2026 10:58 AM,Mahindra,,2025,Diesel,45000,740895.0977777778
+=======
+17-11-2026 11:10 AM,Toyota,,2026,Diesel,1000,750516.6666666666
+>>>>>>> Stashed changes
